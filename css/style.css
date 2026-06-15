@@ -113,6 +113,12 @@ body {
   line-height: 1.8;
 }
 
+.version-label {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  opacity: 0.45;
+}
+
 /* ── Play ── */
 #game-area {
   outline: none;
