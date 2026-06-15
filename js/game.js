@@ -6,7 +6,7 @@ const DEFAULTS = {
   showFish: true,
   soundEnabled: true,
   readingMode: "hidden", // "hidden" | "always"
-  poolMode: "all", // "all" | "single" | "multi"
+  poolMode: "single", // "all" | "single" | "multi"
 };
 
 const POOL_MODE_LABELS = { all: "すべて", single: "1字のみ", multi: "2文字以上" };
