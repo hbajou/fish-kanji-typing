@@ -1,7 +1,7 @@
 ﻿const SCREENS = { TITLE: "title", PLAY: "play", RESULT: "result" };
 
 const DEFAULTS = {
-  questionCount: 40,
+  questionCount: 10,
   timeLimit: 60,
   showFish: true,
   soundEnabled: true,
