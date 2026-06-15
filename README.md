@@ -1,30 +1,8 @@
-﻿# 魚辺タイピング
+# 魚辺タイピング
 
-魚辺（うおへん）の漢字や、魚・海の生き物の複合表記の読みをローマ字でタイピングするブラウザゲームです。
+魚辺（うおへん）の漢字や、魚・海の生き物の読みをローマ字でタイピングするブラウザゲームです。
 
-## 特徴
-
-- 外部ライブラリ不要（HTML / CSS / JavaScript のみ）
-- 問題数・制限時間・出題範囲を設定可能
-- 1字（魚辺）と複合表記（2文字以上）を切り替え可能
-- 読み仮名なし / 常時表示モード
-- タイプ音・ミス音（ON/OFF 可）
-- 結果画面にタイピング統計を表示
-
-## 遊び方
-
-### ローカルで起動
-
-```bash
-cd fish-kanji-typing
-python -m http.server 8765
-```
-
-ブラウザで http://localhost:8765 を開く。
-
-`index.html` を直接開いても動作しますが、ローカルサーバー経由を推奨します。
-
-### 操作
+## 操作
 
 | 画面 | 操作 |
 |------|------|
@@ -32,49 +10,4 @@ python -m http.server 8765
 | プレイ中 | ローマ字入力 / Enter＝ヒント（-5秒） / Esc または「やめる」で中断 |
 | 結果 | スペース＝リトライ / Esc または「タイトルへ」で戻る |
 
-ローマ字はヘボン式・訓令式の両方に対応（例: `chou` / `tyou`、`shi` / `si`）。
-
-## 出題データ
-
-| 出題範囲 | 件数（目安） |
-|---------|-------------|
-| すべて | 155問 |
-| 1字のみ | 96問 |
-| 複合のみ | 59問 |
-
-同じ読みでも漢字が異なるエントリは別問題として出題されます（例: 鰯 / 鰛 ともに「いわし」）。
-
-データの追加・編集は `js/kanji-data.js` で行えます。
-
-## ファイル構成
-
-```
-fish-kanji-typing/
-├── index.html       # 画面
-├── css/style.css    # スタイル
-├── js/
-│   ├── kanji-data.js  # 出題データ
-│   ├── romaji.js      # ローマ字変換・判定
-│   └── game.js        # ゲームロジック
-└── README.md
-```
-
-## Web 公開（GitHub Pages）
-
-このリポジトリ単体で GitHub Pages を有効にできます。
-
-1. GitHub で `fish-kanji-typing` リポジトリを作成（空で OK）
-2. ローカルから push:
-
-```bash
-git remote add origin https://github.com/hbajou/fish-kanji-typing.git
-git push -u origin main
-```
-
-3. リポジトリの **Settings → Pages** で  
-   **Source: Deploy from branch** → **main** / **/ (root)** を選択
-4. 数分後 `https://hbajou.github.io/fish-kanji-typing/` で公開されます
-
-## 参考
-
-[お魚タイピング](https://keyx0.net/osakana/) を参考にした別作品です。
+ローマ字はヘボン式・訓令式の両方に対応しています。

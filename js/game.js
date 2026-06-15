@@ -9,7 +9,11 @@ const DEFAULTS = {
   poolMode: "all", // "all" | "single" | "multi"
 };
 
-const POOL_MODE_LABELS = { all: "すべて", single: "1字のみ", multi: "複合のみ" };
+const POOL_MODE_LABELS = { all: "すべて", single: "1字のみ", multi: "2文字以上" };
+
+function formatTimeLimit(seconds) {
+  return seconds === 0 ? "無制限" : `${seconds}秒`;
+}
 
 let state = {
   screen: SCREENS.TITLE,
@@ -126,7 +130,8 @@ function pickQuestions(count) {
 }
 
 function calcDefaultTime(count) {
-  return Math.max(30, Math.round(count * 1.5));
+  const seconds = Math.max(30, Math.round(count * 1.5));
+  return seconds > 120 ? 0 : seconds;
 }
 
 function isEscape(e) {
@@ -151,7 +156,7 @@ function updateSettingsUI() {
   setSettingValue("questions", state.settings.questionCount === 0
     ? `すべて（${poolLen}問）`
     : `${state.settings.questionCount}問`);
-  setSettingValue("time", `${state.settings.timeLimit}秒`);
+  setSettingValue("time", formatTimeLimit(state.settings.timeLimit));
   setSettingValue("fish", state.settings.showFish ? "ON" : "OFF");
   setSettingValue("sound", state.settings.soundEnabled ? "ON" : "OFF");
   setSettingValue("reading", state.settings.readingMode === "always" ? "常時表示" : "なし");
@@ -172,6 +177,8 @@ function updatePlayFooter() {
   if (!footer) return;
   footer.textContent = state.settings.readingMode === "always"
     ? "読み仮名表示中 ／ Esc＝やめる"
+    : state.settings.timeLimit === 0
+      ? "Enter＝ヒント ／ Esc＝やめる"
     : "Enter＝ヒント（-5秒） ／ Esc＝やめる";
 }
 
@@ -201,7 +208,11 @@ function startGame() {
   state.stats = { correctKeys: 0, mistypes: 0 };
 
   clearInterval(state.timerId);
-  state.timerId = setInterval(tick, 1000);
+  if (state.settings.timeLimit > 0) {
+    state.timerId = setInterval(tick, 1000);
+  } else {
+    state.timerId = null;
+  }
 
   if (state.settings.soundEnabled) getAudioCtx();
 
@@ -217,8 +228,8 @@ function tick() {
 
 function updateTimerDisplay() {
   const el = $("#timer");
-  el.textContent = state.timeLeft;
-  el.classList.toggle("warning", state.timeLeft <= 10);
+  el.textContent = formatTimeLimit(state.settings.timeLimit === 0 ? 0 : state.timeLeft);
+  el.classList.toggle("warning", state.settings.timeLimit > 0 && state.timeLeft <= 10);
 }
 
 function currentQuestion() {
@@ -327,11 +338,13 @@ function handleKeydown(e) {
     if (!state.hintVisible) {
       state.hintVisible = true;
       state.hintsUsed++;
-      state.timeLeft = Math.max(0, state.timeLeft - 5);
+      if (state.settings.timeLimit > 0) {
+        state.timeLeft = Math.max(0, state.timeLeft - 5);
+      }
       updateTimerDisplay();
       $("#hint-text").textContent = currentQuestion().reading[0];
       $("#hint-text").classList.add("visible");
-      if (state.timeLeft <= 0) endGame(false);
+      if (state.settings.timeLimit > 0 && state.timeLeft <= 0) endGame(false);
     }
     return;
   }
@@ -403,7 +416,7 @@ function init() {
     cycleSetting("questionCount", [10, 20, 40, 60, 80, 0]);
   });
   $("#setting-time").addEventListener("click", () => {
-    cycleSetting("timeLimit", [30, 45, 60, 90, 120, 180]);
+    cycleSetting("timeLimit", [30, 45, 60, 90, 120, 0]);
   });
   $("#setting-fish").addEventListener("click", () => {
     cycleSetting("showFish", [true, false]);
