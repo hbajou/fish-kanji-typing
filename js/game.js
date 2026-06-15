@@ -135,7 +135,7 @@ function calcDefaultTime(count) {
 }
 
 function isEscape(e) {
-  return e.key === "Escape" || e.code === "Escape";
+  return e.key === "Escape" || e.key === "Esc" || e.code === "Escape" || e.keyCode === 27 || e.which === 27;
 }
 
 function focusGame() {
@@ -385,6 +385,15 @@ function handleKeydown(e) {
   }
 }
 
+function handleEscapeFallback(e) {
+  if (!isEscape(e)) return;
+  if (state.screen === SCREENS.PLAY || state.screen === SCREENS.RESULT) {
+    e.preventDefault();
+    e.stopPropagation();
+    goTitle();
+  }
+}
+
 function goTitle() {
   clearInterval(state.timerId);
   state.timerId = null;
@@ -404,6 +413,7 @@ function init() {
 
   // capture: true で IME や子要素より先に Esc を拾う
   window.addEventListener("keydown", handleKeydown, true);
+  document.addEventListener("keyup", handleEscapeFallback, true);
   $("#game-area").addEventListener("click", focusGame);
   $("#app").addEventListener("click", () => {
     if (state.screen === SCREENS.PLAY) focusGame();
